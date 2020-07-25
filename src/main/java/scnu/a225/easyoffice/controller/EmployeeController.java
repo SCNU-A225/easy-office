@@ -20,6 +20,7 @@ import scnu.a225.easyoffice.entity.Employee;
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @ClassName: EmployeeController
@@ -42,14 +43,14 @@ public class EmployeeController {
         UsernamePasswordToken token = new UsernamePasswordToken(sn, password);    //封装令牌
         try {
             subject.login(token);   //登录
-            Employee employee = employeeDao.selectEmployee(sn, password);
-            Assert.notNull(employee, "用户不可能为空");
+            Map<String, Object> employeeInfo = employeeDao.getEmployeeInfo(sn, password);
+            Assert.notNull(employeeInfo, "用户不可能为空");
             return new HashMap<String, Object>() {{
                 put("code", 200);
                 put("sn", sn);
-                put("password", password);
-                put("post", employee.getPost());
-                put("department", employee.getDepartment());
+                put("name", employeeInfo.get("name"));
+                put("post", employeeInfo.get("post"));
+                put("department", employeeInfo.get("department_name"));
             }};
         } catch (UnknownAccountException e) {
             return new HashMap<String, Object>() {{
