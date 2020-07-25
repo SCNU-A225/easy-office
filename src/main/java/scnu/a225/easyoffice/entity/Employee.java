@@ -8,6 +8,19 @@ package scnu.a225.easyoffice.entity;
  * @Version 1.0
  */
 public class Employee {
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "sn='" + sn + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", departmentSn='" + departmentSn + '\'' +
+                ", post='" + post + '\'' +
+                ", department=" + department +
+                '}';
+    }
+
     // 职员编号
     private String sn;
     // 密码

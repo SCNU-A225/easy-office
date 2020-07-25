@@ -1,12 +1,15 @@
 debug: false
 server:
-  port: 8080
+  port: 5050
 spring:
   profiles:
     active: dev
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://172.19.9.23/easyoffice?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://47.100.10.67/easyoffice?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
     username: root
     password: root
 
+shiro:
+  loginUrl: ${frontend.baseUrl}/login.html
+  unauthorizedUrl: ${frontend.baseUrl}/unauth.html
