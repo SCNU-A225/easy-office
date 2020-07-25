@@ -88,5 +88,13 @@ public class EmployeeController {
         }};
     }
 
+    @PostMapping("/password")
+    public Object password(String password, String newPassword, HttpSession session) {
+        String sn = (String) session.getAttribute("sn");
+        int res = employeeDao.changePassword(password, newPassword, sn);
+        if (res == 1) return new Result(200, "修改成功");
+        else return new Result(401, "原密码错误");
+    }
+
 
 }
