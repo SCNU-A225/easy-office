@@ -18,5 +18,10 @@ public interface ExpenseDao {
     List<Map<String,Object>> selectVoucherItems(int id);
 
     // 获取报销单处理记录
+    @Select("SELECT deal_sn, deal_time, deal_way, deal_result, comment FROM deal_record WHERE claim_voucher_id=#{id}")
+    List<Map<String,Object>> selectRecord(int id);
 
+    // 获取个人所有报销单
+    @Select("SELECT id, cause, create_time, total_amount, status FROM claim_voucher WHERE create_sn=#{sn}")
+    List<Map<String,Object>> selectAllVoucher(String sn);
 }
