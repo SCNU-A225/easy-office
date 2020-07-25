@@ -14,11 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import scnu.a225.easyoffice.dao.EmployeeDao;
 import scnu.a225.easyoffice.entity.Employee;
-import scnu.a225.easyoffice.service.EmployeeService;
 
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @ClassName: EmployeeController
@@ -33,15 +34,15 @@ import java.util.HashMap;
 @RestController
 public class EmployeeController {
     @Autowired
-    private EmployeeService employeeService;
+    private EmployeeDao employeeDao;
 
     @PostMapping("/user/login")
-    public HashMap<String, Object> login(String sn,String password) {
+    public Map<String, Object> login(String sn, String password) {
         Subject subject = SecurityUtils.getSubject();   //获取当前用户
         UsernamePasswordToken token = new UsernamePasswordToken(sn, password);    //封装令牌
         try {
             subject.login(token);   //登录
-            Employee employee = employeeService.selectEmployee(sn, password);
+            Employee employee = employeeDao.selectEmployee(sn, password);
             Assert.notNull(employee, "用户不可能为空");
             return new HashMap<String, Object>() {{
                 put("code", 200);
