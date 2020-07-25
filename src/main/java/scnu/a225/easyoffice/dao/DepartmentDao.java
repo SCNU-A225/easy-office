@@ -21,4 +21,6 @@ public interface DepartmentDao {
     Department select(String sn);
     @Select("select * from department")
     List<Department> selectAll();
+    @Select("select * from department where sn = #{sn} or name = #{name}")
+    Department checkIsExits(String sn, String name);
 }
