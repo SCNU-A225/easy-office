@@ -27,7 +27,7 @@ import scnu.a225.easyoffice.entity.Employee;
 
 /**
  * @ClassName: ShiroConfig
- * @Description: TODO
+ * @Description: Shiro配置类
  * @Author: jiangjian
  * @CreateDate: 2020/7/25 18:46
  * @UpdateUser: jiangjian
@@ -49,10 +49,7 @@ public class ShiroConfig {
     @Bean
     public ShiroFilterChainDefinition shiroFilterChainDefinition() {
         DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
-        //chainDefinition.addPathDefinition("/", "anon");
         chainDefinition.addPathDefinition("/user/login", "anon");
-        //defaultShiroFilterChainDefinition.addPathDefinition("/logout", "logout"); //shiro注销页
-        //defaultShiroFilterChainDefinition.addPathDefinition("/**", "authc"); //其它路径需要登录
         chainDefinition.addPathDefinition("/**", "authc"); //全部路径的授权交由注解控制
         return chainDefinition;
     }
