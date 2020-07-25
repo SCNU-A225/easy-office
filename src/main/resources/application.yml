@@ -1,0 +1,12 @@
+debug: false
+server:
+  port: 8080
+spring:
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://172.19.9.23/easyoffice?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+    username: root
+    password: root
+
