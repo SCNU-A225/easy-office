@@ -36,7 +36,8 @@ public class Contant {
     }
 
     // 报销单状态
-    public static final String CLAIMVOUCHER_CREATED="新创建";
+    public static final String CLAIMVOUCHER_CREATED="已创建";
+    public static final String CLAIMVOUCHER_SAVED="已保存";
     public static final String CLAIMVOUCHER_SUBMIT="已提交";
     public static final String CLAIMVOUCHER_BACK="已打回";
     public static final String CLAIMVOUCHER_UPDTAE="已修改";
