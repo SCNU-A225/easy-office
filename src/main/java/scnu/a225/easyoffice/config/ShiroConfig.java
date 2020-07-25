@@ -22,8 +22,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import scnu.a225.easyoffice.dao.EmployeeDao;
 import scnu.a225.easyoffice.entity.Employee;
-import scnu.a225.easyoffice.service.EmployeeService;
 
 /**
  * @ClassName: ShiroConfig
@@ -72,7 +72,7 @@ class UserRealm extends AuthorizingRealm {
     }
 
     @Autowired
-    private EmployeeService employeeService;
+    private EmployeeDao employeeDao;
 
     //授权
     @Override
@@ -91,7 +91,7 @@ class UserRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         UsernamePasswordToken userToken = (UsernamePasswordToken) authenticationToken;
-        Employee employee = employeeService.selectEmployee(userToken.getUsername(), String.valueOf(userToken.getPassword()));
+        Employee employee = employeeDao.selectEmployee(userToken.getUsername(), String.valueOf(userToken.getPassword()));
 
         if (null == employee) {
             return null;    //UnknownAccountException

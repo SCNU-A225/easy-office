@@ -11,6 +11,7 @@ public interface EmployeeDao {
     @Select("SELECT * FROM employee WHERE sn=#{sn} and password=#{password}")
     Employee selectEmployee(String sn, String password);
 
-    @Select("SELECT * FROM employee,department")
+    @Select("SELECT sn,password,name,department,post FROM employee,department" +
+            "WHERE sn=#{sn} and password=#{password} and ")
     Map<String, Object> getEmployeeInfo(String sn, String password);
 }
