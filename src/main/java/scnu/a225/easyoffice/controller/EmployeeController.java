@@ -37,7 +37,7 @@ public class EmployeeController {
     private EmployeeDao employeeDao;
 
     @PostMapping("/user/login")
-    public Object login(String sn, String password) {
+    public Object login(String sn, String password, HttpSession session) {
         if(null == sn || sn.isEmpty()) return new Result(401, "请输入工号");
         else if(null == password || password.isEmpty()) return new Result(401, "请输入密码");
 
@@ -47,6 +47,13 @@ public class EmployeeController {
             subject.login(token);   //登录
             Map<String, Object> employeeInfo = employeeDao.getEmployeeInfo(sn, password);
             Assert.notNull(employeeInfo, "用户不可能为空");
+
+            session.setAttribute("sn", sn);
+            session.setAttribute("name", employeeInfo.get("name"));
+            session.setAttribute("post", employeeInfo.get("post"));
+            session.setAttribute("department_sn", employeeInfo.get("department_sn"));
+            session.setAttribute("department", employeeInfo.get("department_name"));
+
             return new HashMap<String, Object>() {{
                 put("code", 200);
                 put("sn", sn);
@@ -71,7 +78,15 @@ public class EmployeeController {
         return new Result(200, "注销成功");
     }
 
-
+    @GetMapping("/info")
+    public Object info(HttpSession session) {
+        return new HashMap<String, Object>() {{
+            put("sn", session.getAttribute("sn"));
+            put("name", session.getAttribute("name"));
+            put("post", session.getAttribute("post"));
+            put("department", session.getAttribute("department"));
+        }};
+    }
 
 
 }
