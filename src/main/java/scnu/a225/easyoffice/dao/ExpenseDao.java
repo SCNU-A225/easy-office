@@ -1,10 +1,8 @@
 package scnu.a225.easyoffice.dao;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import scnu.a225.easyoffice.utils.Result;
 
 import java.util.List;
@@ -29,15 +27,26 @@ public interface ExpenseDao {
     @Select("SELECT id, cause, create_time, total_amount, status FROM claim_voucher WHERE create_sn=#{sn}")
     List<Map<String,Object>> selectAllVoucher(String sn);
 
+    // 插入报销单
     @Insert("INSERT INTO claim_voucher VALUES(null,#{cause},#{create_sn},now(),#{next_deal_sn},#{total_amount},#{status})")
     @Options(useGeneratedKeys = true, keyProperty = "res.code", keyColumn = "id")
     int insertClaimVoucher(String cause, String create_sn, String next_deal_sn, Double total_amount, String status, Result res);
 
+    // 插入处理记录
     @Insert("INSERT INTO deal_record values(null,#{claim_voucher_id},#{create_sn},now(),#{deal_way},#{deal_result},#{comment})")
     int insertDealRecord(Integer claim_voucher_id, String create_sn, String deal_way, String deal_result, String comment);
 
+    // 插入报销项
     @Insert("INSERT INTO claim_voucher_item VALUES(null,#{claim_voucher_id},#{item},${amount},#{comment})")
     int insertClaimVoucherItem(Integer claim_voucher_id, String item, Double amount, String comment);
+
+    // 删除报销项
+    @Delete("DELETE FROM claim_voucher_item WHERE claim_voucher_id=#{id}")
+    int deleteClaimVoucherItem(Integer id);
+
+    // 修改报销单
+    @Update("UPDATE claim_voucher SET cause=#{cause},total_amount=#{total_amount},status=#{status} WHERE id=#{id}")
+    int updateClaimVoucher(String cause, Double total_amount, String status, Integer id);
 
     // 获取待处理报销单
     @Select("SELECT c.id, c.cause, c.create_time, c.total_amount, c.status, e.name FROM claim_voucher c," +

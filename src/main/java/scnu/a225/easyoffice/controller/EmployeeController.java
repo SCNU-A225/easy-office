@@ -10,7 +10,10 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import scnu.a225.easyoffice.dao.EmployeeDao;
 import scnu.a225.easyoffice.entity.Employee;
@@ -34,11 +37,14 @@ import java.util.Set;
  */
 @RestController
 public class EmployeeController {
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
+
     @Autowired
     private EmployeeDao employeeDao;
 
     @PostMapping("/user/login")
     public Object login(String sn, String password, HttpSession session) {
+        logger.info("登录");
         if(null == sn || sn.isEmpty()) return new Result(401, "请输入工号");
         else if(null == password || password.isEmpty()) return new Result(401, "请输入密码");
 
