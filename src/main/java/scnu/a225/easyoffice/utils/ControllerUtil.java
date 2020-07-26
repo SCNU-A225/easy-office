@@ -17,4 +17,8 @@ public class ControllerUtil {
         System.out.println(json.toJSONString());
         return null!=json && !("undifened".equals(json.toJSONString())||"".equals(json.toJSONString()));
     }
+
+    public static boolean stringNotNull(String str) {
+        return null!=str && !str.isEmpty();
+    }
 }

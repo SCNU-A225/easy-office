@@ -50,6 +50,7 @@ public class ShiroConfig {
     public ShiroFilterChainDefinition shiroFilterChainDefinition() {
         DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
         chainDefinition.addPathDefinition("/user/login", "anon");
+        chainDefinition.addPathDefinition("/swagger-ui.html", "anon");
         chainDefinition.addPathDefinition("/**", "authc"); //全部路径的授权交由注解控制
         return chainDefinition;
     }

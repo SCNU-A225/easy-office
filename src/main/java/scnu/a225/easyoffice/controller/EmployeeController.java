@@ -1,5 +1,6 @@
 package scnu.a225.easyoffice.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,6 +9,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.Assert;
 import org.slf4j.Logger;
@@ -15,13 +17,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import scnu.a225.easyoffice.dao.DepartmentDao;
 import scnu.a225.easyoffice.dao.EmployeeDao;
 import scnu.a225.easyoffice.entity.Employee;
+import scnu.a225.easyoffice.global.Contant;
+import scnu.a225.easyoffice.utils.ControllerUtil;
 import scnu.a225.easyoffice.utils.Result;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,6 +47,9 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeDao employeeDao;
+
+    @Autowired
+    private DepartmentDao departmentDao;
 
     @PostMapping("/user/login")
     public Object login(String sn, String password, HttpSession session) {
@@ -144,7 +153,7 @@ public class EmployeeController {
     @GetMapping("/employee/departlist")
     @RequiresRoles(value = "总经理")
     public JSONObject employeeInfoByD_sn(String department_sn){
-        List list = employeeDao.getInfoByDepartment_sn(department_sn);
+        List<Employee> list = employeeDao.getInfoByDepartment_sn(department_sn);
         JSONObject json = new JSONObject();
         json.put("employees", list.toString());
         return json;
@@ -153,12 +162,19 @@ public class EmployeeController {
     /*
     2.4 查找所有员工
     */
-    @GetMapping("/employee/all")
-    @RequiresRoles(value = "总经理")
-    public JSONObject employee_all() {
-        List list = employeeDao.getAll();
+    @PostMapping("/employee/all")
+    public Object employee_all(String post, String department,HttpSession session) {
+        if (!ControllerUtil.stringNotNull(post)) return new Result(400, "职位不能为空");
+        else if (!ControllerUtil.stringNotNull(department)) return new Result(401, "部门名称不能为空");
+        Map<String, Object> data;
+        if (Contant.POST_GM.equals(post)) {
+            data = employeeDao.getAllEmployee();
+        } else {
+            data = employeeDao.getEmployeeByDepartmentName(department);
+        }
         JSONObject json = new JSONObject();
-        json.put("employees", list.toString());
+        json.put("employees", JSON.toJSONString(data));
+        logger.info(json.toJSONString());
         return json;
     }
 

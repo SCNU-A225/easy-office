@@ -1,11 +1,13 @@
 package scnu.a225.easyoffice.dao;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Component;
 import scnu.a225.easyoffice.entity.Employee;
 
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -29,10 +31,16 @@ public interface EmployeeDao {
 //    按部门查找员工
     @Select("SELECT employee.sn, employee.name, employee.department_sn, employee.post, department.name as departmentName FROM employee,department WHERE employee.department_sn = department.sn and employee.department_sn=#{department_sn}")
     List<Employee> getInfoByDepartment_sn(String department_sn);
-//    所有员工信息
+
+    //    所有员工信息
     @Select("SELECT employee.sn, employee.name, employee.department_sn, employee.post, department.name as departmentName " +
             "FROM employee,department WHERE employee.department_sn=department.sn")
-    List<Employee> getAll();
+    Map<String, Object> getAllEmployee();
+//    所有员工信息
+    @Select("SELECT employee.sn, employee.name, employee.department_sn, employee.post, department.name as departmentName " +
+            "FROM employee,department WHERE employee.department_sn=department.sn and department.name=#{department_name}")
+    Map<String, Object> getEmployeeByDepartmentName(String department_name);
+
 //   按员工编号查找员工信息
     @Select("SELECT employee.sn, employee.name, employee.department_sn, employee.post, department.name as departmentName FROM employee,department WHERE employee.department_sn = department.sn and employee.sn=#{sn}")
     List<Employee> getInfoBySn(String sn);
