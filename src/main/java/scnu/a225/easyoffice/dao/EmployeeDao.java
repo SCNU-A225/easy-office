@@ -20,4 +20,26 @@ public interface EmployeeDao {
     @Update("UPDATE employee SET password=#{newPassword} WHERE sn=#{sn} and password=#{password}")
     int changePassword(String password, String newPassword, String sn);
 
+//    添加员工
+    @Insert("INSERT INTO employee VALUES(#{sn},#{name},#{password},#{department_sn},#{post})")
+    void insert(Employee employee);
+//    删除员工
+    @Delete("DELETE FROM employee WHERE sn=#{sn}")
+    void delete(String sn);
+//    按部门查找员工
+    @Select("SELECT employee.sn, employee.name, employee.department_sn, employee.post, department.name as departmentName FROM employee,department WHERE employee.department_sn = department.sn and employee.department_sn=#{department_sn}")
+    List<Employee> getInfoByDepartment_sn(String department_sn);
+//    所有员工信息
+    @Select("SELECT employee.sn, employee.name, employee.department_sn, employee.post, department.name as departmentName " +
+            "FROM employee,department WHERE employee.department_sn=department.sn")
+    List<Employee> getAll();
+//   按员工编号查找员工信息
+    @Select("SELECT employee.sn, employee.name, employee.department_sn, employee.post, department.name as departmentName FROM employee,department WHERE employee.department_sn = department.sn and employee.sn=#{sn}")
+    List<Employee> getInfoBySn(String sn);
+//    修改员工信息
+    @Select("UPDATE employee set name=#{name}, department_sn=#{department_sn}, post=#{post} WHERE sn=#{sn}")
+    void update(Employee employee);
+//    查看存在
+    @Select("select * from employee where sn = #{sn}")
+    Employee checkIsExits(String sn);
 }

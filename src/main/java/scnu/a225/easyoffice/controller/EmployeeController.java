@@ -1,5 +1,6 @@
 package scnu.a225.easyoffice.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.shiro.SecurityUtils;
@@ -96,5 +97,90 @@ public class EmployeeController {
         else return new Result(401, "原密码错误");
     }
 
+   /*
+    2.1 添加员工
+    */
+    @PostMapping("/employee/add")
+    @RequiresRoles(value = "总经理")
+    public Object employee_add(Employee employee) {
+        if (null == employee.getSn()|| employee.getSn().isEmpty())
+            return new Result(401, "请输入员工编号");
+        if (null == employee.getName() || employee.getName().isEmpty())
+            return new Result(402, "请输入员工姓名");
+        if (null == employee.getPassword() || employee.getPassword().isEmpty())
+            return new Result(403, "请输入密码");
+        if (null == employee.getDepartmentSn() || employee.getDepartmentSn().isEmpty())
+            return new Result(404, "请输入部门编号");
+        if (null == employee.getPost() || employee.getPost().isEmpty())
+            return new Result(405, "请输入职务");
+        if (employeeDao.checkIsExits(employee.getSn())!=null)
+            return new Result(501, "员工编号已存在");
+        if (departmentDao.checkIsExits(employee.getDepartmentSn(), employee.getDepartment().getName())==null)
+            return new Result(501, "部门编号不存在");
+
+        employeeDao.insert(employee);
+        return new Result(200, "添加成功");
+    }
+
+    /*
+    2.2 删除员工
+     */
+    @DeleteMapping("/delete")
+    @RequiresRoles(value = "总经理")
+    public Object deleteEmployee(String sn) {
+        employeeDao.delete(sn);
+        return new Result(200, "删除成功");
+    }
+
+   /*
+    2.3按部门查找员工
+     */
+    @GetMapping("/employee/departlist")
+    @RequiresRoles(value = "总经理")
+    public JSONObject employeeInfoByD_sn(String department_sn){
+        List list = employeeDao.getInfoByDepartment_sn(department_sn);
+        JSONObject json = new JSONObject();
+        json.put("employees", list.toString());
+        return json;
+    }
+
+    /*
+    2.4 查找所有员工
+    */
+    @GetMapping("/employee/all")
+    @RequiresRoles(value = "总经理")
+    public JSONObject employee_all() {
+        List list = employeeDao.getAll();
+        JSONObject json = new JSONObject();
+        json.put("employees", list.toString());
+        return json;
+    }
+
+    /*
+    2.5 查找一个员工
+    */
+    @PostMapping("/employee/info")
+    @RequiresRoles(value = "总经理")
+    public JSONObject employeeInfo(String sn) {
+        List list = employeeDao.getInfoBySn(sn);
+        JSONObject json = new JSONObject();
+        json.put("employee", list.toString());
+        return json;
+    }
+
+    /*
+    2.6 修改员工信息
+     */
+    @PostMapping("/employee/update")
+    @RequiresRoles(value = "总经理")
+    public Object updateEmployee(Employee employee,String sn, String department_sn, String post) {
+        if (null == employee.getDepartmentSn() || employee.getDepartmentSn().isEmpty())
+            return new Result(401, "请输入部门编号");
+        if (null == employee.getPost() || employee.getPost().isEmpty())
+            return new Result(402, "请输入职务");
+        employeeDao.update(employee);
+        return new Result(200, "更新成功");
+
+    }
 
 }
