@@ -137,6 +137,7 @@ public class EmployeeController {
         employee.setSn(sn);
         employee.setDepartmentSn(department_sn);
         employee.setName(name);
+        employee.setPost(post);
         employee.setPassword("000000");
         employeeDao.insert(employee);
         return new Result(200, "添加成功");
