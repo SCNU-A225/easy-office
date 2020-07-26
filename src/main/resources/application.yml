@@ -3,7 +3,7 @@ server:
   port: 5050
 spring:
   profiles:
-    active: dev
+    active: prod
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://47.100.10.67/easyoffice?useUnicode=true&characterEncoding=utf8
