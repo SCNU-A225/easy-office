@@ -116,7 +116,7 @@ public class EmployeeController {
     2.1 添加员工
     */
     @PostMapping("/employee/add")
-    @RequiresRoles(value = "总经理")
+    @RequiresRoles(value = "总经理|部门经理")
     public Object employee_add(String sn, String name, String department_sn, String post) {
         if (null == sn)
             return new Result(401, "请输入员工编号");
@@ -145,7 +145,7 @@ public class EmployeeController {
     2.2 删除员工
      */
     @DeleteMapping("/delete")
-    @RequiresRoles(value = "总经理")
+    @RequiresRoles(value = "总经理|部门经理")
     public Object deleteEmployee(String sn) {
         employeeDao.delete(sn);
         return new Result(200, "删除成功");
@@ -155,7 +155,7 @@ public class EmployeeController {
     2.3按部门查找员工
      */
     @GetMapping("/employee/departlist")
-    @RequiresRoles(value = "总经理")
+    @RequiresRoles(value = "总经理|部门经理")
     public JSONObject employeeInfoByD_sn(String department_sn){
         List<Employee> list = employeeDao.getInfoByDepartment_sn(department_sn);
         JSONObject json = new JSONObject();
@@ -170,35 +170,41 @@ public class EmployeeController {
     public Object employee_all(String post, String department,HttpSession session) {
         if (!ControllerUtil.stringNotNull(post)) return new Result(400, "职位不能为空");
         else if (!ControllerUtil.stringNotNull(department)) return new Result(401, "部门名称不能为空");
-        Map<String, Object> data;
+        List<Map<String, Object>> data;
         if (Contant.POST_GM.equals(post)) {
             data = employeeDao.getAllEmployee();
         } else {
             data = employeeDao.getEmployeeByDepartmentName(department);
         }
-        JSONObject json = new JSONObject();
-        json.put("employees", JSON.toJSONString(data));
-        logger.info(json.toJSONString());
-        return json;
+        Map<String,Object> result = new HashMap<>();
+        result.put("employees",data);
+//        JSONObject json = new JSONObject();
+//        json.put("employees", JSON.toJSONString(data));
+//        logger.info(json.toJSONString());
+//        return json;
+        return result;
     }
 
     /*
     2.5 查找一个员工
     */
     @PostMapping("/employee/info")
-    @RequiresRoles(value = "总经理")
-    public JSONObject employeeInfo(String sn) {
-        List list = employeeDao.getInfoBySn(sn);
-        JSONObject json = new JSONObject();
-        json.put("employee", list.toString());
-        return json;
+    @RequiresRoles(value = "总经理|部门经理")
+    public Object employeeInfo(String sn) {
+        Map<String,Object> employee = employeeDao.getInfoBySn(sn);
+        Map<String,Object> result = new HashMap<>();
+        result.put("employee",employee);
+        return result;
+//        JSONObject json = new JSONObject();
+//        json.put("employee", list.toString());
+//        return json;
     }
 
     /*
     2.6 修改员工信息
      */
     @PostMapping("/employee/update")
-    @RequiresRoles(value = "总经理")
+    @RequiresRoles(value = "总经理|部门经理")
     public Object updateEmployee(Employee employee,String sn, String department_sn, String post) {
         if (null == employee.getDepartmentSn() || employee.getDepartmentSn().isEmpty())
             return new Result(401, "请输入部门编号");

@@ -35,15 +35,15 @@ public interface EmployeeDao {
     //    所有员工信息
     @Select("SELECT employee.sn, employee.name, employee.department_sn, employee.post, department.name as departmentName " +
             "FROM employee,department WHERE employee.department_sn=department.sn")
-    Map<String, Object> getAllEmployee();
+    List<Map<String, Object>> getAllEmployee();
 //    所有员工信息
     @Select("SELECT employee.sn, employee.name, employee.department_sn, employee.post, department.name as departmentName " +
             "FROM employee,department WHERE employee.department_sn=department.sn and department.name=#{department_name}")
-    Map<String, Object> getEmployeeByDepartmentName(String department_name);
+    List<Map<String, Object>> getEmployeeByDepartmentName(String department_name);
 
 //   按员工编号查找员工信息
     @Select("SELECT employee.sn, employee.name, employee.department_sn, employee.post, department.name as departmentName FROM employee,department WHERE employee.department_sn = department.sn and employee.sn=#{sn}")
-    List<Employee> getInfoBySn(String sn);
+    Map<String,Object> getInfoBySn(String sn);
 //    修改员工信息
     @Select("UPDATE employee set name=#{name}, department_sn=#{department_sn}, post=#{post} WHERE sn=#{sn}")
     void update(Employee employee);
