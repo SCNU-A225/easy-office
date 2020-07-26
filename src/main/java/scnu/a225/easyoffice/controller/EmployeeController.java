@@ -8,6 +8,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.Assert;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import scnu.a225.easyoffice.dao.DepartmentDao;
 import scnu.a225.easyoffice.dao.EmployeeDao;
 import scnu.a225.easyoffice.entity.Employee;
 import scnu.a225.easyoffice.utils.Result;
@@ -22,6 +24,7 @@ import scnu.a225.easyoffice.utils.Result;
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,6 +44,9 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeDao employeeDao;
+
+    @Autowired
+    private DepartmentDao departmentDao;
 
     @PostMapping("/user/login")
     public Object login(String sn, String password, HttpSession session) {
@@ -108,22 +114,26 @@ public class EmployeeController {
     */
     @PostMapping("/employee/add")
     @RequiresRoles(value = "总经理")
-    public Object employee_add(Employee employee) {
-        if (null == employee.getSn()|| employee.getSn().isEmpty())
+    public Object employee_add(String sn, String name, String department_sn, String post) {
+        if (null == sn)
             return new Result(401, "请输入员工编号");
-        if (null == employee.getName() || employee.getName().isEmpty())
+        if (null == name)
             return new Result(402, "请输入员工姓名");
-        if (null == employee.getPassword() || employee.getPassword().isEmpty())
-            return new Result(403, "请输入密码");
-        if (null == employee.getDepartmentSn() || employee.getDepartmentSn().isEmpty())
+//        if (null == employee.getPassword() || employee.getPassword().isEmpty())
+//            return new Result(403, "请输入密码");
+        if (null == department_sn)
             return new Result(404, "请输入部门编号");
-        if (null == employee.getPost() || employee.getPost().isEmpty())
+        if (null == post)
             return new Result(405, "请输入职务");
-        if (employeeDao.checkIsExits(employee.getSn())!=null)
+        if (employeeDao.checkIsExits(sn)!=null)
             return new Result(501, "员工编号已存在");
-        if (departmentDao.checkIsExits(employee.getDepartmentSn(), employee.getDepartment().getName())==null)
+        if (departmentDao.checkIsExitsByDepartmentSn(department_sn)==null)
             return new Result(501, "部门编号不存在");
-
+        Employee employee = new Employee();
+        employee.setSn(sn);
+        employee.setDepartmentSn(department_sn);
+        employee.setName(name);
+        employee.setPassword("000000");
         employeeDao.insert(employee);
         return new Result(200, "添加成功");
     }
