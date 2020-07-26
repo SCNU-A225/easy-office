@@ -1,5 +1,6 @@
 package scnu.a225.easyoffice.controller;
 
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class DepartmentController {
     private DepartmentDao departmentDao;
 
     @GetMapping("/all")
-    @RequiresRoles(value = "总经理")
+    @RequiresRoles(value = {"总经理","部门经理"},logical = Logical.OR)
     public Map<String, Object> list() {
         return new HashMap<String, Object>() {{
             put("departmentList", departmentDao.selectAll());
