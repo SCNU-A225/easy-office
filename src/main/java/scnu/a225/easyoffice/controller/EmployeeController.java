@@ -145,7 +145,7 @@ public class EmployeeController {
     /*
     2.2 删除员工
      */
-    @DeleteMapping("/delete")
+    @PostMapping("/employee/delete")
     @RequiresRoles(value = {"总经理","部门经理"},logical = Logical.OR)
     public Object deleteEmployee(String sn) {
         employeeDao.delete(sn);
@@ -206,11 +206,20 @@ public class EmployeeController {
      */
     @PostMapping("/employee/update")
     @RequiresRoles(value = {"总经理","部门经理"},logical = Logical.OR)
-    public Object updateEmployee(Employee employee,String sn, String department_sn, String post) {
-        if (null == employee.getDepartmentSn() || employee.getDepartmentSn().isEmpty())
+    public Object updateEmployee(String sn, String name, String department_sn, String post) {
+        if (null == department_sn)
             return new Result(401, "请输入部门编号");
-        if (null == employee.getPost() || employee.getPost().isEmpty())
+        if (null == post)
             return new Result(402, "请输入职务");
+        if (null == sn)
+            return new Result(402, "请输入员工号");
+        if (null == name)
+            return new Result(402, "请输入员工姓名");
+        Employee employee = new Employee();
+        employee.setName(name);
+        employee.setSn(sn);
+        employee.setDepartmentSn(department_sn);
+        employee.setPost(post);
         employeeDao.update(employee);
         return new Result(200, "更新成功");
 
