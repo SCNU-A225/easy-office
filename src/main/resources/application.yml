@@ -6,7 +6,7 @@ spring:
     active: dev
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://47.100.10.67/easyoffice?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://47.100.10.67/easyoffice?useUnicode=true&characterEncoding=utf8
     username: root
     password: root
 
