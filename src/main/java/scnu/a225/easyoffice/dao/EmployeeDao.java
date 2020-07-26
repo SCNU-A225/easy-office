@@ -23,7 +23,7 @@ public interface EmployeeDao {
     int changePassword(String password, String newPassword, String sn);
 
 //    添加员工
-    @Insert("INSERT INTO employee VALUES(#{sn},#{name},#{password},#{department_sn},#{post})")
+    @Insert("INSERT INTO employee VALUES(#{sn},#{password},#{name},#{department_sn},#{post})")
     void insert(Employee employee);
 //    删除员工
     @Delete("DELETE FROM employee WHERE sn=#{sn}")

@@ -15,7 +15,7 @@ public class Employee {
                 "sn='" + sn + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
-                ", departmentSn='" + departmentSn + '\'' +
+                ", departmentSn='" + department_sn + '\'' +
                 ", post='" + post + '\'' +
                 ", department=" + department +
                 '}';
@@ -28,7 +28,7 @@ public class Employee {
     // 名字
     private String name;
     // 所属部门编号
-    private String departmentSn;
+    private String department_sn;
     // 职务
     private String post;
 
@@ -57,11 +57,11 @@ public class Employee {
     }
 
     public String getDepartmentSn() {
-        return departmentSn;
+        return department_sn;
     }
 
     public void setDepartmentSn(String departmentSn) {
-        this.departmentSn = departmentSn;
+        this.department_sn = departmentSn;
     }
 
     public String getPost() {

@@ -117,22 +117,26 @@ public class EmployeeController {
     */
     @PostMapping("/employee/add")
     @RequiresRoles(value = "总经理")
-    public Object employee_add(Employee employee) {
-        if (null == employee.getSn()|| employee.getSn().isEmpty())
+    public Object employee_add(String sn, String name, String department_sn, String post) {
+        if (null == sn)
             return new Result(401, "请输入员工编号");
-        if (null == employee.getName() || employee.getName().isEmpty())
+        if (null == name)
             return new Result(402, "请输入员工姓名");
-        if (null == employee.getPassword() || employee.getPassword().isEmpty())
-            return new Result(403, "请输入密码");
-        if (null == employee.getDepartmentSn() || employee.getDepartmentSn().isEmpty())
+//        if (null == employee.getPassword() || employee.getPassword().isEmpty())
+//            return new Result(403, "请输入密码");
+        if (null == department_sn)
             return new Result(404, "请输入部门编号");
-        if (null == employee.getPost() || employee.getPost().isEmpty())
+        if (null == post)
             return new Result(405, "请输入职务");
-        if (employeeDao.checkIsExits(employee.getSn())!=null)
+        if (employeeDao.checkIsExits(sn)!=null)
             return new Result(501, "员工编号已存在");
-        if (departmentDao.checkIsExits(employee.getDepartmentSn(), employee.getDepartment().getName())==null)
+        if (departmentDao.checkIsExitsByDepartmentSn(department_sn)==null)
             return new Result(501, "部门编号不存在");
-
+        Employee employee = new Employee();
+        employee.setSn(sn);
+        employee.setDepartmentSn(department_sn);
+        employee.setName(name);
+        employee.setPassword("000000");
         employeeDao.insert(employee);
         return new Result(200, "添加成功");
     }
